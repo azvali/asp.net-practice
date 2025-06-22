@@ -14,6 +14,11 @@ function App() {
     setTask('');
   }
 
+  const handleRemove = (e) => {
+    e.preventDefault();
+    //do something
+  }
+
 
   return (
     <>
@@ -26,7 +31,7 @@ function App() {
       </form>
       <div className='list-items'>
         <h1> temp </h1>
-        <button>Remove</button>
+        <button onClick={(e) => {handleRemove(e)}}>Remove</button>
       </div>
     </>
   )
