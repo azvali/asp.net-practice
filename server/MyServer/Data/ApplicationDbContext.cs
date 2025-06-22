@@ -6,4 +6,5 @@ namespace MyServer.Data;
 
 public static class ApplicationDbContext : DbContext{
 
+    
 }
