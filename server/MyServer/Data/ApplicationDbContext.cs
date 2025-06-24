@@ -1,10 +1,16 @@
 using Microsoft.EntityFrameworkCore;
-using MyServer.Models;
+using MyServer.DataModels;
 
 namespace MyServer.Data;
 
 
-public static class ApplicationDbContext : DbContext{
+public class ApplicationDbContext : DbContext{
 
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
+    {
+    }
+
+    public DbSet<TodoItem> Tasks {get; set;}
     
 }
