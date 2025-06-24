@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 function App() {
@@ -7,9 +7,12 @@ function App() {
   const [task, setTask] = useState('');
   const [dbList, setDbList] = useState([]);
 
+  useEffect(() => {
+    getTasks();
+  }, [])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    //do something
 
     console.log(task);
 
@@ -28,13 +31,38 @@ function App() {
 
     const data = await response.json();
     console.log(data);
+    setDbList(currList => [...currList, data]);
     setTask('');
   }
+  
+  const getTasks = async () => {
+    const response = await fetch('http://localhost:5093/api/getTasks', {
+      method: "GET",
+    })
 
-  const handleRemove = (e) => {
-    e.preventDefault();
-    //do something
+    const data = await response.json();
+
+    if(response.ok){
+      setDbList(data);
+      
+    }
   }
+
+  const handleRemove = async (id) => {
+    
+    const response = await fetch(`http://localhost:5093/api/deleteItem/${id}`, {
+      method : "DELETE"
+    });
+
+    const data = response.json();
+
+    if(response.ok){
+      setDbList(currList => currList.filter(item => item.id !== id));
+    }
+    else{
+      console.log(data);
+    }
+  } 
 
   return (
     <>
@@ -46,8 +74,12 @@ function App() {
         <button type='submit' onClick={(e) => {handleSubmit(e)}}>Add</button>
       </form>
       <div className='list-items'>
-        <h1> temp </h1>
-        <button onClick={(e) => {handleRemove(e)}}>Remove</button>
+        {dbList.map(item => (
+          <div className='list-item' key={item.id}>
+            <h1>{item.content}</h1>
+            <button onClick={() => {handleRemove(item.id)}}>Remove</button>
+          </div>
+        ))}
       </div>
     </>
   )
